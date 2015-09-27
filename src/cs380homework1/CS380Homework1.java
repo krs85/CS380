@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
  *
  * @author kellyshiptoski
@@ -26,14 +29,51 @@ public class CS380Homework1 {
         //System.out.println();
         //showGameState(cloneGameState(state));
         
-        ArrayList<ArrayList<Integer>> state = loadGameState("SBP-level0.txt");
-        ArrayList<ArrayList<Integer>> stateSolved = loadGameState("SBP-level0-solved.txt");
-        boolean stateBool = puzzleCompleteCheck(state);
-        boolean stateSolvedBool = puzzleCompleteCheck(stateSolved);
+        //ArrayList<ArrayList<Integer>> state = loadGameState("SBP-level0.txt");
+        //ArrayList<ArrayList<Integer>> stateSolved = loadGameState("SBP-level0-solved.txt");
+        //boolean stateBool = puzzleCompleteCheck(state);
+        //boolean stateSolvedBool = puzzleCompleteCheck(stateSolved);
         
-        System.out.println(stateBool);
-        System.out.println();
-        System.out.println(stateSolvedBool);
+        //System.out.println(stateBool);
+        //System.out.println();
+        //System.out.println(stateSolvedBool);
+        ArrayList<ArrayList<Integer>> state = loadGameState("SBP-level1.txt");
+        Moves move = new Moves();
+        move.setIntIdentifier(4);
+        move.setDirection(Moves.Direction.left);
+        //ArrayList<Moves.Direction> directions = move.movesPossible(4, state);
+        
+        /*HashMap<Integer, ArrayList<Moves.Direction>> allMoves = move.allMoves(state);
+        Set<Integer> keys = allMoves.keySet();
+        for (Integer key: keys)
+        {
+           ArrayList<Moves.Direction> moves = allMoves.get(key);
+           System.out.println("Moves for " + key);
+           for(Moves.Direction direction: moves)
+           {
+               System.out.println(direction);
+           }
+        }*/
+
+        for(int i = 0; i < state.size(); i++)
+        {
+            for(int j = 0; j < state.get(0).size(); j++)
+            {
+                System.out.print(state.get(i).get(j) + " ");
+            }
+            System.out.println();
+        }
+
+        Moves.applyMove(state, move);
+        
+        for(int i = 0; i < state.size(); i++)
+        {
+            for(int j = 0; j < state.get(0).size(); j++)
+            {
+                System.out.print(state.get(i).get(j) + " ");
+            }
+            System.out.println();
+        }
     }
     
     static ArrayList<ArrayList<Integer>> loadGameState(String filename) throws IOException
@@ -86,7 +126,7 @@ public class CS380Homework1 {
             {
                 clonedGameState.get(i).add(gameState.get(i).get(j));
             }
-        }
+        } 
         return clonedGameState;
     }
     
@@ -103,5 +143,6 @@ public class CS380Homework1 {
         }
         return true;
     }
+    
 }
 
