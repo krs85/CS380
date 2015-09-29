@@ -7,6 +7,7 @@ package cs380homework1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *
@@ -27,7 +28,7 @@ public class Moves {
     public Direction getDirection() {return direction;}
     public void setDirection (Direction direction) {this.direction = direction;}
     
-    ArrayList<Direction> movesPossible (int piece, ArrayList<ArrayList<Integer>> gameState)
+    static ArrayList<Moves> movesPossible (int piece, ArrayList<ArrayList<Integer>> gameState)
     {
         ArrayList<Boolean> moveUp = new ArrayList<Boolean>();
         ArrayList<Boolean> moveDown = new ArrayList<Boolean>();
@@ -52,19 +53,39 @@ public class Moves {
             }
         }
 
-        ArrayList<Direction> moves = new ArrayList<Direction>();
+        ArrayList<Moves> moves = new ArrayList<Moves>();
         if (sameComponents(moveUp))
-            moves.add(Direction.up);
+        {
+            Moves move = new Moves();
+            move.direction = Direction.up;
+            move.intIdentifier = piece;
+            moves.add(move);
+        }
         if (sameComponents(moveDown))
-            moves.add(Direction.down);
+        {
+            Moves move = new Moves();
+            move.direction = Direction.down;
+            move.intIdentifier = piece;
+            moves.add(move);
+        }
         if (sameComponents(moveLeft))
-            moves.add(Direction.left);
+        {
+            Moves move = new Moves();
+            move.direction = Direction.left;
+            move.intIdentifier = piece;
+            moves.add(move);
+        }
         if (sameComponents(moveRight))
-            moves.add(Direction.right);
+        {
+            Moves move = new Moves();
+            move.direction = Direction.right;
+            move.intIdentifier = piece;
+            moves.add(move);
+        }
         return moves;
     }
     
-    Boolean sameComponents(ArrayList<Boolean> boolList)
+    static Boolean sameComponents(ArrayList<Boolean> boolList)
     {
         for (int i = 0; i < boolList.size(); i++)
         {
@@ -74,54 +95,109 @@ public class Moves {
         return boolList.get(0);
     }
     
-    HashMap<Integer, ArrayList<Direction>> allMoves(ArrayList<ArrayList<Integer>> gameState)
+    static ArrayList<Moves> allMoves(ArrayList<ArrayList<Integer>> gameState)
     {
-        HashMap<Integer, ArrayList<Direction>> allMoves = new HashMap<Integer, ArrayList<Direction>>();
+        ArrayList<Moves> list = new ArrayList<Moves>();
+        HashSet<Integer> seenPieces = new HashSet<Integer>();
         for(int i = 0; i < gameState.size(); i++)
         {
             for(int j = 0; j < gameState.get(0).size(); j++)
             {
-                if(gameState.get(i).get(j) > 1)
-                    allMoves.put(gameState.get(i).get(j), movesPossible(gameState.get(i).get(j), gameState));
+                int piece = gameState.get(i).get(j);
+                if(piece > 1 && !seenPieces.contains(piece))
+                {
+                    seenPieces.add(piece);
+                    list.addAll(movesPossible(piece, gameState));
+                }
             }
         }
-        return allMoves;
+        
+        return list;
     }
     
     static void applyMove(ArrayList<ArrayList<Integer>> gameState, Moves move)
     {
-        for(int i = 0; i < gameState.size(); i++)
+        int upperLeftColumn = 0;
+        int upperLeftRow = 0;
+        boolean found = false;
+        for (int i = 0; i < gameState.size() && !found; i++)
         {
-            for(int j = 0; j < gameState.get(0).size(); j++)
+            for (int j = 0; j < gameState.get(0).size() && !found; j++)
             {
-                if(gameState.get(i).get(j) == move.intIdentifier)
+                if (move.intIdentifier == gameState.get(i).get(j))
                 {
-                    if(move.direction == Direction.up)
-                    {
-                        int replacement = gameState.get(i).get(j-1);
-                        gameState.get(i).set(j, replacement); 
-                        gameState.get(i).set(j-1, move.intIdentifier);
-                    }
-                    else if(move.direction == Direction.down)
-                    {
-                        int replacement = gameState.get(i).get(j+1);
-                        gameState.get(i).set(j, replacement);
-                        gameState.get(i).set(j+1, move.intIdentifier);
-                    }
-                    else if(move.direction == Direction.left)
-                    {
-                        int replacement = gameState.get(i-1).get(j);
-                        gameState.get(i).set(j, replacement);
-                        gameState.get(i-1).set(j, move.intIdentifier);
-                    }
-                    else if(move.direction == Direction.right)
-                    {
-                        int replacement = gameState.get(i+1).get(j);
-                        gameState.get(i).set(j, replacement);
-                        gameState.get(i+1).set(j, move.intIdentifier);
-                    }
+                    upperLeftRow = i;
+                    upperLeftColumn = j;
+                    found = true;
                 }
             }
         }
+        
+        if (move.direction == Direction.up)
+        {
+            int lastRow = upperLeftRow;
+            int lastColumn = upperLeftColumn;
+            while(gameState.get(lastRow + 1).get(upperLeftColumn) == move.intIdentifier)
+                lastRow++;
+            
+            do
+            {
+                gameState.get(upperLeftRow - 1).set(lastColumn, move.intIdentifier);
+                gameState.get(lastRow).set(lastColumn, 0);
+                lastColumn++;
+            } while (gameState.get(lastRow).get(lastColumn) == move.intIdentifier);
+        }
+                
+        else if (move.direction == Direction.down)
+        {
+            int lastRow = upperLeftRow;
+            int lastColumn = upperLeftColumn;
+            while(gameState.get(lastRow + 1).get(upperLeftColumn) == move.intIdentifier)
+                lastRow++;
+
+            do
+            {
+                gameState.get(lastRow + 1).set(lastColumn, move.intIdentifier);
+                gameState.get(upperLeftRow).set(upperLeftColumn, 0);
+                lastColumn++;
+            } while(gameState.get(lastRow).get(lastColumn) == move.intIdentifier);
+        }
+        
+        else if (move.direction == Direction.left)
+        {
+            int lastRow = upperLeftRow;
+            int lastColumn = upperLeftColumn;
+            while(gameState.get(upperLeftRow).get(lastColumn + 1) == move.intIdentifier)
+                lastColumn++;
+            
+            do
+            {
+                gameState.get(lastRow).set(upperLeftColumn - 1, move.intIdentifier);
+                gameState.get(lastRow).set(lastColumn, 0);
+                lastRow++;
+            } while (gameState.get(lastRow).get(lastColumn) == move.intIdentifier);
+        }
+        
+        else if (move.direction == Direction.right)
+        {
+            int lastRow = upperLeftRow;
+            int lastColumn = upperLeftColumn;
+            while(gameState.get(upperLeftRow).get(lastColumn + 1) == move.intIdentifier)
+                lastColumn++;
+            
+            do
+            {
+                gameState.get(lastRow).set(upperLeftColumn, 0);
+                gameState.get(lastRow).set(lastColumn + 1, move.intIdentifier);
+                lastRow++;
+            } while (gameState.get(lastRow).get(lastColumn) == move.intIdentifier);
+        }
+    }
+    
+    static ArrayList<ArrayList<Integer>> applyMoveCloning (ArrayList<ArrayList<Integer>> gameState, Moves move)
+    {
+        ArrayList<ArrayList<Integer>> clonedState = CS380Homework1.cloneGameState(gameState);
+        applyMove(clonedState, move);
+        return clonedState;
     }
 }

@@ -5,98 +5,17 @@
  */
 package cs380homework1;
 
-import java.util.List;
-import java.io.IOException;
-import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
-import java.util.Set;
 
 /**
  *
  * @author kellyshiptoski
  */
-public class CS380Homework1 {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws IOException {
-        // TODO code application logic here
-        //ArrayList<ArrayList<Integer>> state = loadGameState("SBP-level1.txt");
-        //showGameState(state);
-        //System.out.println();
-        //showGameState(cloneGameState(state));
-        
-        //ArrayList<ArrayList<Integer>> state = loadGameState("SBP-level0.txt");
-        //ArrayList<ArrayList<Integer>> stateSolved = loadGameState("SBP-level0-solved.txt");
-        //boolean stateBool = puzzleCompleteCheck(state);
-        //boolean stateSolvedBool = puzzleCompleteCheck(stateSolved);
-        
-        //System.out.println(stateBool);
-        //System.out.println();
-        //System.out.println(stateSolvedBool);
-        //ArrayList<ArrayList<Integer>> state = loadGameState("SBP-level1.txt");
-        //Moves move = new Moves();
-        //move.setIntIdentifier(4);
-        //move.setDirection(Moves.Direction.left);
-        //ArrayList<Moves.Direction> directions = move.movesPossible(4, state);
-        
-        /*HashMap<Integer, ArrayList<Moves.Direction>> allMoves = move.allMoves(state);
-        Set<Integer> keys = allMoves.keySet();
-        for (Integer key: keys)
-        {
-           ArrayList<Moves.Direction> moves = allMoves.get(key);
-           System.out.println("Moves for " + key);
-           for(Moves.Direction direction: moves)
-           {
-               System.out.println(direction);
-           }
-        }*/
-
-//        for(int i = 0; i < state.size(); i++)
-//        {
-//            for(int j = 0; j < state.get(0).size(); j++)
-//            {
-//                System.out.print(state.get(i).get(j) + " ");
-//            }
-//            System.out.println();
-//        }
-//        
-//        System.out.println();
-//
-//        Moves.applyMove(state, move);
-//        
-//        for(int i = 0; i < state.size(); i++)
-//        {
-//            for(int j = 0; j < state.get(0).size(); j++)
-//            {
-//                System.out.print(state.get(i).get(j) + " ");
-//            }
-//            System.out.println();
-//        }
-//        
-//        Moves move2 = new Moves();
-//        move2.setDirection(Moves.Direction.down);
-//        move2.setIntIdentifier(4);
-//        
-//        Moves.applyMove(state, move2);
-//        
-//        for(int i = 0; i < state.size(); i++)
-//        {
-//            for(int j = 0; j < state.get(0).size(); j++)
-//            {
-//                System.out.print(state.get(i).get(j) + " ");
-//            }
-//            System.out.println();
-//        }
-        ArrayList<ArrayList<Integer>> state = loadGameState("SBP-level0.txt");
-        randomWalk(state, 3);
-        
-    }
-    
+public class SlidingBrickPuzzle {
     static ArrayList<ArrayList<Integer>> loadGameState(String filename) throws IOException
     {
         FileReader fr = new FileReader(filename);
@@ -239,4 +158,3 @@ public class CS380Homework1 {
         }
     }
 }
-
